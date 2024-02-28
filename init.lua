@@ -5,6 +5,16 @@ vim.api.nvim_create_user_command(
   end,
   {}
 )
+
+-- https://github.com/neovim/neovim/issues/23725#issuecomment-1561364086
+-- when usign pyright we may have cpu 100% usage issues and got stuck
+-- local ok, wf = pcall(require, "vim.lsp._watchfiles")
+-- if ok then
+--    -- disable lsp watcher. Too slow on linux
+--    wf._watchfunc = function()
+--      return function() end
+--    end
+-- end
 -- local autocmd = vim.api.nvim_create_autocmd
 
 -- Auto resize panes when resizing nvim window

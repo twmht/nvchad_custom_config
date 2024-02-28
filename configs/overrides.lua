@@ -19,9 +19,6 @@ M.treesitter = {
     --   "python"
     -- },
   },
-  highlight = {
-    enable = true,
-  },
 }
 
 M.mason = {
@@ -80,7 +77,9 @@ if cmp_ok then
     --   },
     --   ["<CR>"] = cmp.config.disable,
     -- },
-    preselect = cmp.PreselectMode.None,
+    -- https://github.com/hrsh7th/nvim-cmp/discussions/1829
+    preselect = cmp.PreselectMode.Item,
+    completion = { completeopt = "menu,menuone" },
   }
 
   cmp.setup.cmdline('/', {

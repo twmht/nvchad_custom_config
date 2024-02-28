@@ -1,3 +1,5 @@
+-- this config is heavily inspired from
+-- https://github.com/aquilesg/nvchadconfig/blob/main/plugins.lua
 local overrides = require("custom.configs.overrides")
 
 
@@ -19,7 +21,8 @@ local plugins = {
     "williamboman/mason.nvim",
     opts = overrides.mason
   },
-
+  -- for automatic lsp server setup
+  -- see https://zhuanlan.zhihu.com/p/614518048
   {
     "nvim-treesitter/nvim-treesitter",
     opts = overrides.treesitter,
@@ -64,7 +67,10 @@ local plugins = {
     'smoka7/hop.nvim',
     version = "*",
     opts = {},
-    lazy = false
+    lazy = false,
+    config = function()
+      require "custom.user.hop"
+    end,
   },
   {
     'tpope/vim-surround',
@@ -90,15 +96,15 @@ local plugins = {
     'airblade/vim-gitgutter',
      lazy=false
   },
-  {
-    'majutsushi/tagbar',
-     config = function()
-      vim.g.tagbar_autofocus = 1
-      vim.g.tagbar_autoclose = 1
-      vim.keymap.set('n', '<F9>', ':TagbarToggle<CR>', {noremap=true, silent = true, nowait = true})
-     end,
-    lazy=false
-  },
+  -- {
+  --   'majutsushi/tagbar',
+  --    config = function()
+  --     vim.g.tagbar_autofocus = 1
+  --     vim.g.tagbar_autoclose = 1
+  --     vim.keymap.set('n', '<F9>', ':TagbarToggle<CR>', {noremap=true, silent = true, nowait = true})
+  --    end,
+  --   lazy=false
+  -- },
   {
     'ojroques/nvim-osc52',
     lazy=false,
@@ -107,21 +113,45 @@ local plugins = {
       vim.keymap.set('n', '<leader>cc', '<leader>c_', {remap = true})
       vim.keymap.set('v', '<leader>c', require('osc52').copy_visual)
     end
-  }
+  },
+  -- Diagnostic stuff
+  {
+    "folke/trouble.nvim",
+    cmd = {
+      "Trouble"
+    },
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {},
+    config = function()
+      require("trouble").setup()
+    end,
+  },
+  {
+    "nvimdev/lspsaga.nvim",
+    event = "LspAttach",
+    cmd = {
+      "Lspsaga"
+    },
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons",
+    },
+    config = function()
+      require("lspsaga").setup({})
+    end,
+  },
+  {
+  "hedyhli/outline.nvim",
+    config = function()
+      vim.keymap.set("n", "<leader>o", "<cmd>Outline<CR>",
+        { desc = "Toggle Outline" })
+      require("outline").setup {
+        -- Your setup opts here (leave empty to use defaults)
+      }
+    end,
+    lazy=false
+},
 
-  -- To make a plugin not be loaded
-  -- {
-  --   "NvChad/nvim-colorizer.lua",
-  --   enabled = false
-  -- },
-
-  -- All NvChad plugins are lazy-loaded by default
-  -- For a plugin to be loaded, you will need to set either `ft`, `cmd`, `keys`, `event`, or set `lazy = false`
-  -- If you want a plugin to load on startup, add `lazy = false` to a plugin spec, for example
-  -- {
-  --   "mg979/vim-visual-multi",
-  --   lazy = false,
-  -- }
 }
 
 return plugins
